@@ -20,10 +20,10 @@ class ToPdf < Thor
                   "--book-name"       => :optional
   def create
     @book_location   = File.join(options['book-location'])
-    @css             = options['css']          || 'amy'
-    @lang            = options['lang']         || 'ruby'
-    @bookname        = options['book-name']    || 'pdfbook'
-    @html_book       = create_html_book('book_root' => @book_location, 'css' => @css, 'lang' => @lang)
+    @css             = options['css']           || 'amy'
+    @lang            = options['code-lang']     || 'ruby'
+    @bookname        = options['book-name']     || 'pdfbook'
+    @html_book       = create_html_book('book-location' => @book_location, 'css' => @css, 'lang' => @lang)
     @prince          = Prince.new
     
     

@@ -51,9 +51,9 @@ module ThorHelpers
   # Create our HTML Book that can later be processed into our PDF book
   def create_html_book(options)
     @_output_path = File.join(options['book-location'], 'pdf_output')
-    self.create_if_missing(@_output_path)
-    @_book        = self.merge_chapters(File.join(options['book-location'], 'layout/chapters'), @_output_path)
-    @_markdown    = self.to_html(@_output_path, @_book)
+    create_if_missing(@_output_path)
+    @_book        = merge_chapters(File.join(options['book-location'], 'layout/chapters'), @_output_path)
+    @_markdown    = to_html(@_output_path, @_book)
 
     File.open(File.join(@_output_path, 'book.html'), 'w') do |f|
       pdf_layout(@_markdown,  options.merge('template' => File.join(options['book-location'], 'layout/pdf_template.html') ) )
