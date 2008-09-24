@@ -10,15 +10,35 @@ require 'lib/thor_helpers'
 class ToPdf < Thor
   include ThorHelpers
   
+  @@blacklist = %w[DS_Store .. . .svn .git .gitignore]
+  
+  # Create
+  # @book-location => The root directory of book which contains the layout, and in it stylesheets, chapters and the pdf_template
   desc 'create',  "Create a PDF Document from Markdown file(s)."
-  method_options  "--markdown-files"  => :required
+  method_options  "--book-location"   => :required,
+                  "--css"             => :optional,
+                  "--code-lang"       => :optional,
+                  "--book-name"       => :optional
   def create
-    pdf_template    = File.join("book/layout/pdf_template.html")
-    output_location = File.join(Dir.pwd, 'pdf_output')
+    book_location   = File.join(options['book-location'])
+    css             = options['css']          || 'amy'
+    lang            = options['lang']         || 'ruby'
+    bookname        = options['book-name']    || 'pdfbook'
+    stylesheets     = []
+    html_book       = create_html_book(:book_root => book_location, :css => css, :lang => lang)
+    prince          = Prince.new
     
-    create_if_missing(output_location)
-    @book     = merge_chapters(options['markdown-files'], output_location)
-    @markdown = to_html(output_location, @book)
+    # TODO: move to ThorHelpers
+    Dir.foreach(File.join(options['book-location']), 'layout/stylesheets') do |filename|
+      next if @@blacklist.include?(filename)
+      stylesheets << filename
+    end
+    
+    prince.add_style_sheets(stylesheets.join(','))
+    
+    File.open("#{File.join(book_location, 'pdf_output', bookname)}.pdf", 'w') do |f|
+      f.puts prince.pdf_from_string(File.new(html_book).read)
+    end
   end
   
 end
