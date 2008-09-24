@@ -13,7 +13,11 @@ module ThorHelpers
   
   # Takes the markdown that is now html as well as an options hash
   # Highlights the code as specified.
+  #
   # TODO: Need to think about how to highlight various different languages in one doc
+  #       Language should not have to be specified by the user, when creating a book.
+  #       The system should be smart enough to figure it out.
+  #
   def pdf_layout(html, options)
     html_template = File.new(options['template']).read
     html_template.gsub!("#body", html)

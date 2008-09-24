@@ -12,6 +12,7 @@ class ToPdf < Thor
   
   # Create
   # @book-location => The root directory of book which contains the layout, and in it stylesheets, chapters and the pdf_template
+  #
   desc 'create',  "Create a PDF Document from Markdown file(s)."
   method_options  "--book-location"   => :required,
                   "--css"             => :optional,
@@ -22,7 +23,7 @@ class ToPdf < Thor
     @css             = options['css']          || 'amy'
     @lang            = options['lang']         || 'ruby'
     @bookname        = options['book-name']    || 'pdfbook'
-    @html_book       = create_html_book(:book_root => @book_location, :css => @css, :lang => @lang)
+    @html_book       = create_html_book('book_root' => @book_location, 'css' => @css, 'lang' => @lang)
     @prince          = Prince.new
     
     
