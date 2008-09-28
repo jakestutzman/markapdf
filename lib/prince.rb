@@ -26,7 +26,7 @@ class Prince
   #
   def exe_path
     # Add any standard cmd line arguments we need to pass
-    @exe_path << " --input=html --server --log=#{@log_file} "
+    @exe_path << " --no-default-style --input=html --server --log=#{@log_file} "
     @exe_path << @style_sheets
     return @exe_path
   end

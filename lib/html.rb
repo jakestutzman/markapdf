@@ -17,10 +17,10 @@ module HTML
     #         :code_lang     => "Pass in the Language for the code if you only covering 1 language"}
     #
     def initialize(options={})
-      @book_location  = options["book_location"] || File.join(Dir.pwd, "book")
-      @code_css       = options["code_css"]      || "amy"
+      @book_location  = options["book-location"] || File.join(Dir.pwd, "book")
+      @code_css       = options["code-css"]      || "amy"
       @bookname       = options["bookname"]      || "MyBook"
-      @code_lang      = options["code_lang"]     || nil
+      @code_lang      = options["code-lang"]     || nil
       @output_path    = File.join(@book_location, "output")
       create_if_missing(@output_path)
     end

@@ -9,7 +9,7 @@ class MarkaPDF < Thor
   # Create HTML Book
   #
   desc 'html_book',   "Create an HTML Document from Markdown file(s)."
-  method_options      "--book_location"   => :optional,
+  method_options      "--book-location"   => :optional,
                       "--bookname"        => :optional,
                       "--code-css"        => :optional,
                       "--code-lang"       => :optional
@@ -22,7 +22,7 @@ class MarkaPDF < Thor
   # Create PDF Book
   #
   desc 'pdf_book',    "Create a PDF Document from Markdown file(s)."
-  method_options      "--location"        => :optional,
+  method_options      "--book-location"   => :optional,
                       "--bookname"        => :optional,
                       "--code-css"        => :optional,
                       "--code-lang"       => :optional
