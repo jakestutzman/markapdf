@@ -4,7 +4,7 @@ MarkaPDF is an easy way to create PDF versions of books or documentation. The re
 building of this library, is I wanted an easy way to create PDF books of documentation of
 Open Source Code and Client Projects. 
 
-The first version will be a simple HTML Book render that includes Syntax Highlighting of
+The first version will be a simple HTML Book renderer that includes Syntax Highlighting of
 code blocks. You can include multiple languages within one book by adding the language
 name to the top of the code block, like so:
 
@@ -42,7 +42,10 @@ Currently, only HTML rendering of the book is supported. A PDF version is being 
 Once the PDF version is complete, I'll start looking into how I can have it parse through
 actual code (project files) so that it can create documentation from comments within the
 code base. Wouldn't it be awesome to write the code for the clients project, include
-appropriate comments that explain what each method does, and have a parse run through
+appropriate comments that explain what each method does, and have a parser run through
 the project and turn your comments into documentation with the code as code blocks
 that the documentation explains. All this in a PDF document that you can turn over at
 any time. 
+
+We have rdoc and yard, but can you seriously turn these over to non-technical clients
+as your documentation of the code base? Not in my experience.
