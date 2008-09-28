@@ -1,4 +1,4 @@
-# Originally from bookmaker project
+# Originally from the bookmaker project
 class Prince
 
   attr_accessor :exe_path, :style_sheets, :log_file
@@ -15,7 +15,7 @@ class Prince
   # Sets stylesheets...
   # Can pass in multiple paths for css files.
   #
-  def add_style_sheets(*sheets)
+  def add_style_sheets(sheets)
     for sheet in sheets do
       @style_sheets << " -s #{sheet} "
     end
@@ -26,7 +26,7 @@ class Prince
   #
   def exe_path
     # Add any standard cmd line arguments we need to pass
-    @exe_path << " --no-default-style --input=html --server --log=#{@log_file} "
+    @exe_path << " --input=html --server --log=#{@log_file} "
     @exe_path << @style_sheets
     return @exe_path
   end

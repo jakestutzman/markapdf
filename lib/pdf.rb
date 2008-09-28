@@ -4,6 +4,7 @@ require 'lib/prince'
 module PDF
   
   class Book
+    attr_reader :book_location, :output_path, :bookname, :code_css, :code_lang
     
     # Initializer
     #
@@ -31,6 +32,7 @@ module PDF
     #
     def create
       prince  = Prince.new
+      prince.add_style_sheets(merge_stylesheets)
 
       File.open("#{File.join(@book_location, 'output', @bookname)}.pdf", 'w') do |f|
         f.puts prince.pdf_from_string( 
