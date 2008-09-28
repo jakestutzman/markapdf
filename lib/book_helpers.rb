@@ -8,7 +8,7 @@ module BookHelpers
   # created, if it doesn't exist)
   #
   def html_book(book_location=nil)
-    book_location ||= File.join(Dir.pwd, "book")
+    book_location   = check_book_location(book_location)
     output          = File.join(book_location, "output")
     create_if_missing(output)
     
@@ -24,9 +24,11 @@ module BookHelpers
   #   :location   => The Location of where the Book Layout lives  -- String
   #   :make_html  => Has the HTML Book been created?              -- Boolean
   #
+  # TODO: Add in HTML Template
+  #
   def pdf_book(options={})
     bookname      = options[:name]      || "pdfbook"
-    book_location = options[:location]  || File.join(Dir.pwd, "book")
+    book_location = check_book_location(options[:location])
     html_book(book_location) if options[:make_html]
     
     prince  = Prince.new
@@ -77,6 +79,11 @@ module BookHelpers
     #                       be saved that contains all the 
     #                       chapters                            -- String / File Path
     #
+    # For ordering, make sure to name your chapters like:
+    # 001_Introduction.markdown
+    # 002_Heading_Home.markdown
+    # 003_A_New_Lesson.markdown
+    #
     # Returns the Path to the Book that has all the Chapters in it
     def merge_chapters(chapter_path, output_path)
       File.open(File.join(output_path, 'book.markdown'), 'w+') do |f|
@@ -107,7 +114,7 @@ module BookHelpers
     #
     # Returns an array of stylesheets within
     def merge_stylesheets(book_location=nil)
-      book_location ||= File.join(Dir.pwd, "book")
+      book_location   = check_book_location(book_location)
       stylesheets     = File.join(book_location, "layout/stylesheets")
       
       sheets = Array.new
@@ -118,9 +125,36 @@ module BookHelpers
     end
     
     
+    # check_book_location
+    #
+    # Returns either the default book location or
+    # the passed in parameter as the book location.
+    #
+    # Returns the book_location
+    def check_book_location(book_location)
+      book_location ||= File.join(Dir.pwd, "book")
+      return book_location
+    end
     
     
-  
+    # Template
+    # 
+    # This will give more control over the look & feel of the
+    # PDF book. The Template is an HTML based template. 
+    #
+    # book_location =>  The Location of where the Book Layout lives  -- String / File Path
+    #
+    # Returns the complete HTML, template + markdown files as
+    # a complete one piece HTML book that can then be turn into
+    # a PDF book.
+    # 
+    def template(book_location=nil)
+      book_location = check_book_location(book_location)
+      
+      
+    end
+    
+    
     # Takes the markdown that is now html as well as an options hash
     # Highlights the code as specified.
     #
