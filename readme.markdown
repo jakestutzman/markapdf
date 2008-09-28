@@ -35,7 +35,30 @@ add the Markdown files to.
 
 ## Creating an HTML Book
 
+First thing you need to do is create some Chapters in book/layout/chapters/ directory.
+Make sure to name your chapters, 001_Title.markdown. Using the 001 prefix will allow
+for proper ordering of your chapters.
 
+In the book/layout/template.html, make sure to include your CSS so you can customize
+the look of your book. Also, if you have code, make sure to include the CSS for it
+as well, which is located in book/layout/stylesheets/highlight. 
+
+Any CSS you add yourself (not the highlight CSS) should be placed in book/layout/stylesheets/
+directory. When a PDF version is created, the parser runs through this directory
+to include any CSS files it finds.
+
+Currently, integrating Thor to use as our creator for HTML and PDF versions of our book.
+Until then, you can created an HTML version from the Terminal:
+
+	require 'lib/html'
+	book = HTML::Book.new('book_location' => "book/", 'bookname' => "MyBook", 
+												'code_css' => "amy", 'code_lang' => "ruby")
+	book.create
+
+The option hash is optional. If you do not pass in any arguments, just make sure to be above
+the book root directory.
+
+The newly created book will be located: book/output/
 
 ## Current support
 

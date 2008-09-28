@@ -1,23 +1,34 @@
-require 'rubygems'
-require 'rdiscount'
-require 'uv'
-require 'fileutils'
 require 'thor'
 
 require 'lib/prince'
-require 'lib/book_helpers'
+require 'lib/html'
+require 'lib/pdf'
 
-class ToPdf < Thor
-  include BookHelpers
+class MarkaPDF < Thor
   
-  # Create
+  # Create HTML Book
   #
-  desc 'create',  "Create a PDF Document from Markdown file(s)."
-  method_options  "--book-location"   => :required,
-                  "--book-name"       => :optional
-  def create
-
+  desc 'html_book',   "Create an HTML Document from Markdown file(s)."
+  method_options      "--book_location"   => :optional,
+                      "--bookname"        => :optional,
+                      "--code-css"        => :optional,
+                      "--code-lang"       => :optional
+  def html_book
+    book = HTML::Book.new(options)
+    book.create
+  end
+  
+  
+  # Create PDF Book
+  #
+  desc 'pdf_book',    "Create a PDF Document from Markdown file(s)."
+  method_options      "--location"        => :optional,
+                      "--bookname"        => :optional,
+                      "--code-css"        => :optional,
+                      "--code-lang"       => :optional
+  def pdf_book
+    book = PDF::Book.new(options)
+    book.create
   end
   
 end
-

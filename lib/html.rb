@@ -3,7 +3,7 @@
 module HTML
   
   class Book
-    attr_reader :book_location, :output_path, :bookname, :code_css
+    attr_reader :book_location, :output_path, :bookname, :code_css, :code_lang
     
     
     # Initializer
@@ -12,13 +12,15 @@ module HTML
     # it will create our output_path folder if it doesn't exist
     #
     # @param {:book_location => "where the root of the book is located",
-    #         :code_css      => "What stylesheet do you want to use for code highlighting"}
+    #         :code_css      => "What stylesheet do you want to use for code highlighting",
+    #         :bookname      => "The name of the book",
+    #         :code_lang     => "Pass in the Language for the code if you only covering 1 language"}
     #
     def initialize(options={})
-      @book_location  = options[:book_location] || File.join(Dir.pwd, "book")
-      @code_css       = options[:code_css]      || "amy"
-      @bookname       = options[:bookname]      || "MyBook"
-      @code_lang      = options[:code_lang]     || nil
+      @book_location  = options["book_location"] || File.join(Dir.pwd, "book")
+      @code_css       = options["code_css"]      || "amy"
+      @bookname       = options["bookname"]      || "MyBook"
+      @code_lang      = options["code_lang"]     || nil
       @output_path    = File.join(@book_location, "output")
       create_if_missing(@output_path)
     end
