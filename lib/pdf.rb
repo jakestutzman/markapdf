@@ -23,7 +23,7 @@ module PDF
       @options        = options
       @book_location  = options["book-location"] || File.join(Dir.pwd, "book")
       @bookname       = options["bookname"]      || "MyBook"
-      @code_css       = options["code-css"]      || "amy"
+      @code_css       = options["code-css"]      || "lazy"
       create_html_book
     end
     

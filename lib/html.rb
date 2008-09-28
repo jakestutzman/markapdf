@@ -18,7 +18,7 @@ module HTML
     #
     def initialize(options={})
       @book_location  = options["book-location"] || File.join(Dir.pwd, "book")
-      @code_css       = options["code-css"]      || "amy"
+      @code_css       = options["code-css"]      || "lazy"
       @bookname       = options["bookname"]      || "MyBook"
       @code_lang      = options["code-lang"]     || nil
       @output_path    = File.join(@book_location, "output")
@@ -124,20 +124,30 @@ module HTML
       # html_template =>  the same HTML template from our template 
       #                   method above.
       #
+      #
       def code_highlight(html_template)
         html_template.gsub!(/<pre><code>.*?<\/code><\/pre>/m) do |code|
-          
-          if code.match(/::.*?::/)
-            @code_lang = code.split("::")[1]
-            code.gsub!(/::.*?::/, '')
-          end
-          
+          code = language(code)
           code = code.gsub('<pre><code>', '').gsub('</code></pre>', '').gsub('&lt;', '<').gsub('&gt;', '>').gsub('&amp;', '&')
-          
           Uv.parse(code, "xhtml", @code_lang, false, @code_css)
         end
         
         return html_template
+      end
+      
+      
+      # language
+      #
+      # Determine what language the code block is in
+      #
+      # code => pass in the HTML Code Block so we can determine
+      #
+      def language(code)
+        if code.match(/::.*?::/)
+          @code_lang = code.split("::")[1]
+          code.gsub!(/::.*?::/, '')
+        end
+        return code
       end
       
   end

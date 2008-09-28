@@ -60,9 +60,22 @@ the book root directory.
 
 The newly created book will be located: book/output/
 
+
+## Creating a PDF Book
+
+This is no different than creating our HTML Book version. The reason is, we have to create
+an HTML version first before we can create a PDF version.
+
+	require 'lib/pdf'
+	book = PDF::Book.new('book_location' => "book/", 'bookname' => "MyBook", 
+												'code_css' => "amy", 'code_lang' => "ruby")
+	book.create
+
+
 ## Current support
 
-Currently, only HTML rendering of the book is supported. A PDF version is being worked on.
+HTML::Book Support
+PDF::Book Support
 
 ## Future
 
