@@ -1,8 +1,8 @@
 require 'rubygems'
 require 'rdiscount'
 require 'uv'
-require 'thor'
 require 'fileutils'
+require 'thor'
 
 require 'lib/prince'
 require 'lib/book_helpers'
