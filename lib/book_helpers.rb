@@ -148,29 +148,26 @@ module BookHelpers
     # a complete one piece HTML book that can then be turn into
     # a PDF book.
     # 
-    def template(book_location=nil)
+    def template(book_location=nil, html)
       book_location = check_book_location(book_location)
-      
-      
+      html_template = File.new(File.join(book_location, 'layout/template.html')).read
+      html_template.gsub!("#body", html)
+      return html_template
     end
     
     
-    # Takes the markdown that is now html as well as an options hash
-    # Highlights the code as specified.
+    # Code Highlighting
     #
-    # TODO: Need to think about how to highlight various different languages in one doc
-    #       Language should not have to be specified by the user, when creating a book.
-    #       The system should be smart enough to figure it out.
+    # html_template =>  the same HTML template from our template 
+    #                   method above.
     #
-    def pdf_layout(html, book_location)
-      template      = File.join(book_location, "pdf_template.html")
-      html_template = File.new(template).read
-      html_template.gsub!("#body", html)
+    # TODO: Remove options hash, it should know the language and it should
+    #       be able to figure out what stylesheet is to be used
+    def code_highlight(html_template)
       html_template.gsub!(/<pre><code>.*?<\/code><\/pre>/m) do |code|
         code = code.gsub('<pre><code>', '').gsub('</code></pre>', '').gsub('&lt;', '<').gsub('&gt;', '>').gsub('&amp;', '&')
-        Uv.parse(code, "xhtml", options['lang'], false, options['css'])
+        # Uv.parse(code, "xhtml", options['lang'], false, options['css'])
       end
     end
-  
 
 end
