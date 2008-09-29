@@ -132,8 +132,9 @@ module HTML
       def code_highlight(html_template)
         html_template.gsub!(/<pre><code>.*?<\/code><\/pre>/m) do |code|
           code = language(code)
+          lang = @language ? @language : @code_lang
           code = code.gsub('<pre><code>', '').gsub('</code></pre>', '').gsub('&lt;', '<').gsub('&gt;', '>').gsub('&amp;', '&')
-          Uv.parse(code, "xhtml", @code_lang, false, @code_css)
+          Uv.parse(code, "xhtml", lang, false, @code_css)
         end
         
         return html_template
@@ -148,8 +149,10 @@ module HTML
       #
       def language(code)
         if code.match(/::.*?::/)
-          @code_lang = code.split("::")[1]
+          @language = code.split("::")[1]
           code.gsub!(/::.*?::/, '')
+        else 
+          @language = nil
         end
         return code
       end
