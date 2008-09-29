@@ -22,18 +22,22 @@ module HTML
       @bookname       = options["bookname"]      || "MyBook"
       @code_lang      = options["code-lang"]     || nil
       @output_path    = File.join(@book_location, "output")
-      create_if_missing(@output_path)
     end
     
     
     # Creates our HTML Book
     #
-    # book_location => The Location of where the Book Layout live   -- String
+    # First, it will create our output_path, if it doesn't already exist.
+    # Then, we'll merge all the Markdown Chapters into one book.markdown file.
+    # The book.markdown file is converted to HTML, ran through our template.html
+    # as well as our custom Code Syntax Highlighter, then outputed as
+    # @bookname.html. 
     #
-    # It creates the HTML Book in the book/output file (output file is 
-    # created, if it doesn't exist)
+    # A clean_up method is called to removed book.markdown and book.html files,
+    # which leaves just one HTML file, the actual completed HTML Book.
     #
     def create
+      create_if_missing(@output_path)
       @book = merge_chapters(File.join(@book_location, "layout/chapters"))
       to_html(@book)
       template
@@ -41,7 +45,7 @@ module HTML
     end
     
     
-    protected
+    # protected
       
       
       # Create the path if it doesn't already exist
