@@ -70,6 +70,7 @@ module PDF
         Dir["#{stylesheets}/*.css"].sort.each do |css|
           sheets << css
         end
+        
         sheets << File.join(stylesheets, "highlight/#{@code_css}.css")
         return sheets
       end

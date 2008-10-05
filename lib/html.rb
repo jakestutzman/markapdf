@@ -3,7 +3,7 @@
 module HTML
   
   class Book
-    attr_reader :book_location, :output_path, :bookname, :code_css, :code_lang
+    attr_reader :book_location, :output_path, :bookname, :code_css, :code_lang, :markup
     
     
     # Initializer

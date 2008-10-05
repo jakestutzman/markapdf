@@ -12,7 +12,8 @@ class MarkaPDF < Thor
   method_options      "--book-location"   => :optional,
                       "--bookname"        => :optional,
                       "--code-css"        => :optional,
-                      "--code-lang"       => :optional
+                      "--code-lang"       => :optional,
+                      "--markup"          => :optional
   def html_book
     book = HTML::Book.new(options)
     book.create
@@ -25,7 +26,8 @@ class MarkaPDF < Thor
   method_options      "--book-location"   => :optional,
                       "--bookname"        => :optional,
                       "--code-css"        => :optional,
-                      "--code-lang"       => :optional
+                      "--code-lang"       => :optional,
+                      "--markup"          => :optional
   def pdf_book
     book = PDF::Book.new(options)
     book.create
