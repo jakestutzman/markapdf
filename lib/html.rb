@@ -1,10 +1,11 @@
 %w[rubygems rdiscount redcloth fileutils uv].each { |r| require r }
 
 module HTML
+  class UnSupportedType < StandardError; end
   
   class Book
     attr_reader :book_location, :output_path, :bookname, :code_css, :code_lang, :markup
-    
+    @@supported_types = %w[markdown textile]
     
     # Initializer
     #
@@ -59,8 +60,10 @@ module HTML
       
       
       def book_type
-        chapter_path = File.join(@book_location, "layout/chapters")
-        Dir["#{chapter_path}/*"].first.split('.').last
+        chapter_path  = File.join(@book_location, "layout/chapters")
+        type          = Dir["#{chapter_path}/*"].first.split('.').last
+        raise UnSupportedType unless @@supported_types.include?(type)
+        return type
       end
       
       # Create the HTML Version of the Book
