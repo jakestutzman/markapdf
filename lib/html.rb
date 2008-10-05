@@ -20,7 +20,7 @@ module HTML
       @book_location  = options["book-location"] || File.join(Dir.pwd, "book")
       @code_css       = options["code-css"]      || "lazy"
       @bookname       = options["bookname"]      || "MyBook"
-      @code_lang      = options["code-lang"]     || nil
+      @code_lang      = options["code-lang"]     || "ruby"
       @output_path    = File.join(@book_location, "output")
     end
     
@@ -97,11 +97,11 @@ module HTML
       
       
       # Template
+      #
+      # book_location =>  The Location of where the Book Layout lives  -- String / File Path
       # 
       # This will give more control over the look & feel of the
       # PDF book. The Template is an HTML based template. 
-      #
-      # book_location =>  The Location of where the Book Layout lives  -- String / File Path
       #
       # Returns the complete HTML, template + markdown files as
       # a complete one piece HTML book that can then be turn into
@@ -132,9 +132,8 @@ module HTML
       def code_highlight(html_template)
         html_template.gsub!(/<pre><code>.*?<\/code><\/pre>/m) do |code|
           code = language(code)
-          lang = @language ? @language : @code_lang
           code = code.gsub('<pre><code>', '').gsub('</code></pre>', '').gsub('&lt;', '<').gsub('&gt;', '>').gsub('&amp;', '&')
-          Uv.parse(code, "xhtml", lang, false, @code_css)
+          Uv.parse(code, "xhtml", @language, false, @code_css)
         end
         
         return html_template
@@ -143,16 +142,23 @@ module HTML
       
       # language
       #
-      # Determine what language the code block is in
-      #
       # code => pass in the HTML Code Block so we can determine
+      #
+      # Determine what language the code block is in.
+      # For all code blocks you can write the following to tell
+      # the parse what language the code block is written in:
+      #
+      # ::ruby::
+      #
+      # That will parsed out and of the code block and the code 
+      # blocked will be read in as ruby code.
       #
       def language(code)
         if code.match(/::.*?::/)
           @language = code.split("::")[1]
           code.gsub!(/::.*?::/, '')
         else 
-          @language = nil
+          @language = @code_lang
         end
         return code
       end

@@ -2,6 +2,7 @@
 
 ## The official XML Schema to be followed is:
 	
+	::xml::
 	<affiliate>
 	
 		<company>

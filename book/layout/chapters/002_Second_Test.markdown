@@ -6,7 +6,8 @@ We are going to test our code blocks. First, HTML:
 	<div class="test">Here is my test code</div>
 
 Here we will test some javascript, that does not include our special language specifier.
-
+	
+	::javascript::
 	$(".test").hide();
 	
 And some CSS code:
@@ -19,5 +20,6 @@ And some CSS code:
 
 
 And lastly, some more javascript without our language specifier.
-
+	
+	::javascript::
 	$('div.test').text("Add some more text here");

@@ -1,5 +1,8 @@
 # MarkaPDF
 
+Similar to the bookmaker, some methods and classes were carried over and extended,
+while new ideas have been added.
+
 MarkaPDF is an easy way to create PDF versions of books or documentation. The reason behind
 building of this library, is I wanted an easy way to create PDF books of documentation of
 Open Source Code and Client Projects. 
