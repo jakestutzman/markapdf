@@ -1,0 +1,32 @@
+h1. Here is our Second Test
+
+We are going to test our code blocks. First, HTML:
+
+<pre><code>
+	::html::
+	<div class="test">Here is my test code</div>
+</code></pre>
+
+Here we will test some javascript, that does not include our special language specifier.
+
+<pre><code>	
+	::javascript::
+	$(".test").hide();
+</code></pre>
+
+And some CSS code:
+
+<pre><code>
+	::css::
+	div.class{
+		border: 1px solid #ccc;
+		background-color: #eee;
+	}
+</code></pre>
+
+And lastly, some more javascript without our language specifier.
+
+<pre><code>	
+	::javascript::
+	$('div.test').text("Add some more text here");
+</code></pre>

@@ -1,4 +1,4 @@
-%w[rubygems rdiscount fileutils uv].each { |r| require r }
+%w[rubygems rdiscount redcloth fileutils uv].each { |r| require r }
 
 module HTML
   
@@ -14,13 +14,15 @@ module HTML
     # @param {:book_location => "where the root of the book is located",
     #         :code_css      => "What stylesheet do you want to use for code highlighting",
     #         :bookname      => "The name of the book",
-    #         :code_lang     => "Pass in the Language for the code if you only covering 1 language"}
+    #         :code_lang     => "Pass in the Language for the code if you only covering 1 language",
+    #         :markup        => "Textile | Markdown"}
     #
     def initialize(options={})
       @book_location  = options["book-location"] || File.join(Dir.pwd, "book")
       @code_css       = options["code-css"]      || "lazy"
       @bookname       = options["bookname"]      || "MyBook"
       @code_lang      = options["code-lang"]     || "ruby"
+      @markup         = options["markup"]        || "markdown"
       @output_path    = File.join(@book_location, "output")
     end
     
@@ -67,7 +69,8 @@ module HTML
       def to_html(markdown_path)
         output = File.new( markdown_path ).read
         File.open(File.join(@output_path, "book.html"), 'w') do |f| 
-          f << RDiscount.new(output).to_html
+          f << RDiscount.new(output).to_html if @markup =~ /markdown/i
+          f << RedCloth.new(output).to_html  if @markup =~ /textile/i
         end
       end
       
@@ -85,14 +88,20 @@ module HTML
       # 002_Heading_Home.markdown
       # 003_A_New_Journey.markdown
       #
+      # OR
+      #
+      # 001_Introduction.textile
+      # 002_Heading_Home.textile
+      # 003_A_New_Journey.textile
+      #
       # Returns the Path to the Book that has all the Chapters in it
       def merge_chapters(chapter_path)
-        File.open(File.join(@output_path, 'book.markdown'), 'w+') do |f|
-          Dir["#{chapter_path}/*.markdown"].sort.each do |dir_path|
+        File.open(File.join(@output_path, "book.#{@markup}"), 'w+') do |f|
+          Dir["#{chapter_path}/*.#{@markup}"].sort.each do |dir_path|
             f << File.new(dir_path).read + "\r\n"
           end
         end
-        return File.join(@output_path, 'book.markdown')
+        return File.join(@output_path, "book.#{@markup}")
       end
       
       
@@ -120,7 +129,7 @@ module HTML
       
       def clean_up
         FileUtils.rm(File.join(@output_path, 'book.html'))
-        FileUtils.rm(File.join(@output_path, 'book.markdown'))
+        FileUtils.rm(File.join(@output_path, "book.#{@markup}"))
       end
 
       # Code Highlighting
