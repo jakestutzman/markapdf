@@ -14,16 +14,15 @@ module HTML
     # @param {:book_location => "where the root of the book is located",
     #         :code_css      => "What stylesheet do you want to use for code highlighting",
     #         :bookname      => "The name of the book",
-    #         :code_lang     => "Pass in the Language for the code if you only covering 1 language",
-    #         :markup        => "Textile | Markdown"}
+    #         :code_lang     => "Pass in the Language for the code if you only covering 1 language"}
     #
     def initialize(options={})
       @book_location  = options["book-location"] || File.join(Dir.pwd, "book")
       @code_css       = options["code-css"]      || "lazy"
       @bookname       = options["bookname"]      || "MyBook"
       @code_lang      = options["code-lang"]     || "ruby"
-      @markup         = options["markup"]        || "markdown"
       @output_path    = File.join(@book_location, "output")
+      @markup         = book_type
     end
     
     
@@ -58,6 +57,11 @@ module HTML
         FileUtils.mkdir(path) unless File.exists?(path)
       end
       
+      
+      def book_type
+        chapter_path = File.join(@book_location, "layout/chapters")
+        Dir["#{chapter_path}/*"].first.split('.').last
+      end
       
       # Create the HTML Version of the Book
       # Takes 2 parameters
