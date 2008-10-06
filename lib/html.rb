@@ -47,7 +47,7 @@ module HTML
     end
     
     
-    # protected
+    protected
       
       
       # Create the path if it doesn't already exist
