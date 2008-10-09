@@ -53,7 +53,7 @@ add the Markdown/Textile files to.
 ## Creating an HTML Book
 
 First thing you need to do is create some Chapters in book/layout/chapters/ directory.
-Make sure to name your chapters, 001_Title.markdown or 001_Title.textile. Using the 001 
+Make sure to name your chapters, 001\_Title.markdown or 001\_Title.textile. Using the 001 
 prefix will allow for proper ordering of your chapters.
 
 Any CSS you add yourself (not the highlight CSS) should be placed in book/layout/stylesheets/
