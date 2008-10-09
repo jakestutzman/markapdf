@@ -7,9 +7,20 @@ MarkaPDF is an easy way to create PDF versions of books or documentation. The re
 building of this library, is I wanted an easy way to create PDF books of documentation of
 Open Source Code and Client Projects. 
 
-The first version will be a simple HTML Book renderer that includes Syntax Highlighting of
-code blocks. You can include multiple languages within one book by adding the language
-name to the top of the code block, like so:
+You can create either an HTML Book version or a PDF Book version. You can use either
+markdown or textile for formatting your book.
+
+## Syntax Highlighting
+
+One of the focuses of building this, was to have code highlighting. I wanted to support
+multiple languages in one book, for those of us who like to write about HTML, CSS and
+JavaScript when it comes to Semantic Markup.
+
+I also wanted to allow the use of CSS for the Code Highlighting, so you can "theme"
+your book, if you want to. I've provided 21 different Stylesheets that will resemble
+the syntax highlighting of the famous Textmate for OS X.
+
+Let's look at how we setup code blocks for a specific language:
 
 	::ruby::
 	class Test
@@ -25,40 +36,42 @@ If the book is all one language, you don't need to include the ::language:: for 
 block. When you instantiate the HTML::Book object, just pass in the language for the book
 and that is what will be used throughout.
 
-Within the book/layout/stylesheets/highlight/ are a bunch of CSS files for doing code
-highlighting. You can add these to the book/layout/template.html HEAD part so that
-when you create your HTML version of the book, you have the appropriate CSS file
-included for Code Highlighting.
+	require 'html'
+	book = HTML::Book.new('code_lang' => "ruby")
+	book.create
+
+When choosing what Stylesheet you'll want to use for highlighting, take a look in the 
+book directory: book/layout/stylesheets/highlight/ and choose one. You'll need to add
+it to the template file's (book/layout/template.html) head.
 
 Also, you can add additional CSS to the HTML template to provide a more personalized
 version of your book/documenation. The template.html file is a starter Template that 
 you can customize for your own needs. Keep in mind that the template.html file needs
 to keep the same filename because the HTML::Book creator will be looking for it to
-add the Markdown files to.
+add the Markdown/Textile files to.
 
 ## Creating an HTML Book
 
 First thing you need to do is create some Chapters in book/layout/chapters/ directory.
-Make sure to name your chapters, 001_Title.markdown. Using the 001 prefix will allow
-for proper ordering of your chapters.
-
-In the book/layout/template.html, make sure to include your CSS so you can customize
-the look of your book. Also, if you have code, make sure to include the CSS for it
-as well, which is located in book/layout/stylesheets/highlight. 
+Make sure to name your chapters, 001_Title.markdown or 001_Title.textile. Using the 001 
+prefix will allow for proper ordering of your chapters.
 
 Any CSS you add yourself (not the highlight CSS) should be placed in book/layout/stylesheets/
 directory. When a PDF version is created, the parser runs through this directory
 to include any CSS files it finds.
 
-Currently, integrating Thor to use as our creator for HTML and PDF versions of our book.
+Just like the chapter naming, you'll need to do the same for the CSS files. This is so you
+can have the CSS loaded in the proper order. e.g. Say you have a reset.css file that you want
+loaded first to reset browser defaults.
+
+*Currently, I do not have this bundled as a gem.
 Until then, you can created an HTML version from the Terminal:
 
 	require 'lib/html'
-	book = HTML::Book.new('book_location' => "book/", 'bookname' => "MyBook", 
-												'code_css' => "amy", 'code_lang' => "ruby")
+	book = HTML::Book.new('book_location' => "book/", 'bookname' => "MyBook", 'code_css' => "amy", 'code_lang' => "ruby")
 	book.create
 
-The option hash is optional. If you do not pass in any arguments, just make sure to be above
+The hash is optional. If you do not pass in any arguments, just make sure to be above
 the book root directory.
 
 The newly created book will be located: book/output/
@@ -70,8 +83,7 @@ This is no different than creating our HTML Book version. The reason is, we have
 an HTML version first before we can create a PDF version.
 
 	require 'lib/pdf'
-	book = PDF::Book.new('book_location' => "book/", 'bookname' => "MyBook", 
-												'code_css' => "amy", 'code_lang' => "ruby")
+	book = PDF::Book.new('book_location' => "book/", 'bookname' => "MyBook", 'code_css' => "amy", 'code_lang' => "ruby")
 	book.create
 
 
@@ -83,13 +95,18 @@ PDF::Book Support
 
 ## Future
 
-Once the PDF version is complete, I'll start looking into how I can have it parse through
-actual code (project files) so that it can create documentation from comments within the
-code base. Wouldn't it be awesome to write the code for the clients project, include
-appropriate comments that explain what each method does, and have a parser run through
-the project and turn your comments into documentation with the code as code blocks
-that the documentation explains. All this in a PDF document that you can turn over at
-any time. 
+There is a specific bug that I am aware of:
 
-We have rdoc and yard, but can you seriously turn these over to non-technical clients
-as your documentation of the code base? Not in my experience.
+* When you create a PDF book, the first page has an image placed in the upper left. 
+
+Features that I like to include:
+
+* Image support
+* Custom sidebar support
+* I'd like to not have to add CSS to the header of the template, but instead make sure
+  that my custom CSS is located in the stylesheet root folder which would automatically
+  get included.
+* I'd like to be able to pass less options into the system, but still have the same amount
+  of control over how it looks and what's included. A smarter system would be nice.
+* I'd like to be able to have this go through actual projects, reading the comments to create
+  a PDF book that you can then hand over as documentation. 
