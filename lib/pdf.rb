@@ -93,11 +93,7 @@ module PDF
       # Creates the HTML book if it doesn't exist
       #
       def create_html_book
-        html_book = File.join(@book_location, 'layout/output', "#{@bookname}.html")
-        unless File.exists?(html_book)
-          book = HTML::Book.new(@options)
-          book.create
-        end
+        HTML::Book.make(@options) unless File.exists?( File.join(@book_location, "output/#{@bookname}.html") )
       end
     
   end
