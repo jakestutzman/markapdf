@@ -28,6 +28,18 @@ module PDF
     end
     
     
+    # PDF::Book.make
+    #
+    # Class method for a single call to create a PDF Book
+    #
+    # @params are the same as the initialize method above
+    #
+    def self.make(options={})
+      book = PDF::Book.new(options)
+      book.create
+    end
+    
+    
     # Creates our PDF Book
     #
     def create

@@ -27,6 +27,18 @@ module HTML
     end
     
     
+    # HTML::Book.make
+    #
+    # Class method for a single call to create an HTML Book
+    #
+    # @params are the same as the initialize method above
+    #
+    def self.make(options={})
+      book = HTML::Book.new(options)
+      book.create
+    end
+    
+    
     # Creates our HTML Book
     #
     # First, it will create our output_path, if it doesn't already exist.
