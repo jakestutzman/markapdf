@@ -36,7 +36,7 @@ If the book is all one language, you don't need to include the ::language:: for 
 block. When you instantiate the HTML::Book object, just pass in the language for the book
 and that is what will be used throughout.
 
-	require 'html'
+	require 'lib/html'
 	book = HTML::Book.new('code_lang' => "ruby")
 	book.create
 
