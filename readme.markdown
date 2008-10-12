@@ -101,6 +101,7 @@ There is a specific bug that I am aware of:
 
 Features that I like to include:
 
+* Gemify this
 * Image support
 * Custom sidebar support
 * I'd like to not have to add CSS to the header of the template, but instead make sure

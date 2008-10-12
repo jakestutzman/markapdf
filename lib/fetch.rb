@@ -1,4 +1,4 @@
-%w[uri net/http fileutils].each { |r| require r }
+%w[uri net/http fileutils lib/generate].each { |r| require r }
 
 # Fetch
 #
@@ -12,7 +12,7 @@
 # 1st problem, let's get the book and allow the user to get it from
 # anywhere, as long as there is some URL.
 #
-# 2nd problem, code highlighting.
+# 2nd problem, code highlighting - let the copier do this.
 
 module Fetch
   
@@ -20,13 +20,20 @@ module Fetch
     
     # init
     #
-    # Options Required
+    # Arguments Required
     #
-    #   :url    => the url to where the book is located
-    #   :type   => html | git
+    #   :url      => the url to where the book is located
+    #   :type     => markdown or textile (whatever extension is used: mdown, etc.)
+    #
+    # Optional Arguments
+    #
+    #   :location => where to install this
     #
     def initialize(options)
-      @options = options
+      @url      = options[:url]
+      @location = File.expand_path(options[:location]) || Dir.pwd
+      @type     = options[:type]
+      @basename = File.basename(@url).split('.').first
     end
     
     
@@ -35,47 +42,44 @@ module Fetch
     # Convience class method
     # Fetch::Book.from(options)
     #
-    def self.from(options)
+    def self.from(url)
       book = Fetch::Book.new(options)
+      book.generate_book
+      book.pull
+      book.cleanup
     end
     
     
-    # Route
+    # Pull
     #
-    # Chooses what type of download, git or html and calls
-    # the respective method.
+    # We're only going to support git at the moment because
+    # that is what I use.
     #
-    def route
+    def pull
+      FileUtils.cd(Dir.pwd)
+      `git clone #{@url}`
+
+      Dir.glob( File.join(@basename, '**', "*#{@type}") ).each do |chapter|
+        `mv #{chapter} #{@location}/book/layout/chapters/`
+      end
       
     end
     
     
-    # Git
+    # Clean Up
     #
-    # A lot of books are on Git, so we need to provide a way to get
-    # those books too.
     #
-    def git
-      
+    def cleanup
+      FileUtils.rm( File.join(Dir.pwd, @basename) )
     end
     
     
-    # HTML
+    # Write
     #
-    # Some books are already in HTML, so we want to allow them to be pulled
-    # down and turned into PDF books.
+    # Generates the Book Layout.
     #
-    def html
-      
-    end
-    
-    
-    # Get
-    #
-    # Use this to get either our html or git book
-    #
-    def get
-      
+    def generate_book
+      Generate::Book.now(@location)
     end
     
   end

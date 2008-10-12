@@ -78,6 +78,7 @@ module HTML
         return type
       end
       
+      
       # Create the HTML Version of the Book
       # Takes 2 parameters
       # output_path     =>  where the HTML version of the book 
@@ -146,10 +147,16 @@ module HTML
       end
       
       
+      # Clean Up
+      #
+      # Cleans up the temporary created files to create our
+      # HTML Book.
+      #
       def clean_up
         FileUtils.rm(File.join(@output_path, 'book.html'))
         FileUtils.rm(File.join(@output_path, "book.#{@markup}"))
       end
+
 
       # Code Highlighting
       #

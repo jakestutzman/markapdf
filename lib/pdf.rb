@@ -76,13 +76,10 @@ module PDF
       #
       # Returns an array of stylesheets within
       def merge_stylesheets
-        stylesheets     = File.join(@book_location, "layout/stylesheets")
-
-        sheets = Array.new
-        Dir["#{stylesheets}/*.css"].sort.each do |css|
-          sheets << css
-        end
+        stylesheets = File.join(@book_location, "layout/stylesheets")
+        sheets      = Array.new
         
+        Dir["#{stylesheets}/*.css"].sort.each { |css| sheets << css }
         sheets << File.join(stylesheets, "highlight/#{@code_css}.css")
         return sheets
       end

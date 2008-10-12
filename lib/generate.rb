@@ -26,6 +26,7 @@ module Generate
       gen.clone
     end
     
+    
     # Clone
     #
     # Copies the book location over to the desired location.
