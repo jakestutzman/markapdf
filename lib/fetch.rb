@@ -42,6 +42,8 @@ module Fetch
     
     # Route
     #
+    # Chooses what type of download, git or html and calls
+    # the respective method.
     #
     def route
       
