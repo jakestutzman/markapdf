@@ -42,7 +42,7 @@ module Fetch
     # Convience class method
     # Fetch::Book.from(options)
     #
-    def self.from(url)
+    def self.from(options)
       book = Fetch::Book.new(options)
       book.generate_book
       book.pull
@@ -60,7 +60,7 @@ module Fetch
       `git clone #{@url}`
 
       Dir.glob( File.join(@basename, '**', "*#{@type}") ).each do |chapter|
-        `mv #{chapter} #{@location}/book/layout/chapters/`
+        FileUtils.mv "#{chapter}", "#{@location}/book/layout/chapters/"
       end
       
     end
@@ -68,9 +68,10 @@ module Fetch
     
     # Clean Up
     #
+    # Clean up after ourselves
     #
     def cleanup
-      FileUtils.rm( File.join(Dir.pwd, @basename) )
+      FileUtils.rm_rf( File.join(Dir.pwd, @basename) )
     end
     
     
