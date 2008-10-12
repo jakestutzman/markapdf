@@ -27,13 +27,13 @@ module Fetch
     #
     # Optional Arguments
     #
-    #   :location => where to install this
+    #   :location => where to install this if empty, assumes current directory
     #
     def initialize(options)
-      @url      = options[:url]
-      @location = File.expand_path(options[:location]) || Dir.pwd
-      @type     = options[:type]
-      @basename = File.basename(@url).split('.').first
+      @url, @type   = options[:url], options[:type]
+      @location     = File.expand_path(options[:location]) || Dir.pwd
+      @basename     = File.basename(@url).split('.').first
+      @chapter_loc  = File.join(@location, "book/layout/chapters/")
     end
     
     
@@ -64,12 +64,12 @@ module Fetch
     
     # Copy
     #
-    # Copy over the files we've collected from our pull
+    # Copy over the files we've collected from our pull request.
     #
     def copy
       FileUtils.cd(@location)
       Dir.glob( File.join(@basename, '**', "*#{@type}") ).each do |chapter|
-        FileUtils.mv "#{chapter}", "#{@location}/book/layout/chapters/"
+        FileUtils.mv(chapter, @chaper_loc) unless File.exists?(File.join(@chapter_loc, chapter))
       end
     end
     
@@ -79,7 +79,7 @@ module Fetch
     # Clean up after ourselves
     #
     def cleanup
-      FileUtils.rm_rf( File.join(Dir.pwd, @basename) )
+      FileUtils.rm_rf( File.join(@location, @basename) )
     end
     
     
