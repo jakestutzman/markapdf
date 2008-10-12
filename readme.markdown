@@ -1,5 +1,7 @@
 # MarkaPDF
 
+Initial thanks goes to the creator of Bookmaker: Carlos Brando.
+
 Similar to the bookmaker, some methods and classes were carried over and extended,
 while new ideas have been added.
 

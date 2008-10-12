@@ -46,6 +46,7 @@ module Fetch
       book = Fetch::Book.new(options)
       book.generate_book
       book.pull
+      book.copy
       book.cleanup
     end
     
@@ -56,13 +57,20 @@ module Fetch
     # that is what I use.
     #
     def pull
-      FileUtils.cd(Dir.pwd)
+      FileUtils.cd(@location)
       `git clone #{@url}`
-
+    end
+    
+    
+    # Copy
+    #
+    # Copy over the files we've collected from our pull
+    #
+    def copy
+      FileUtils.cd(@location)
       Dir.glob( File.join(@basename, '**', "*#{@type}") ).each do |chapter|
         FileUtils.mv "#{chapter}", "#{@location}/book/layout/chapters/"
       end
-      
     end
     
     
