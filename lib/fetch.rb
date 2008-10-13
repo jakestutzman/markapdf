@@ -1,5 +1,7 @@
 %w[uri net/http fileutils lib/generate].each { |r| require r }
 
+require 'lib/mixins/file_helper'
+
 # Fetch
 #
 # What if I don't want to write a book, but instead see a book that 
@@ -17,6 +19,7 @@
 module Fetch
   
   class Book
+    include FileHelper
     
     # init
     #
@@ -47,7 +50,7 @@ module Fetch
       book.generate_book
       book.pull
       book.copy
-      book.cleanup
+      clean_up File.join(@location, @basename)
     end
     
     
@@ -71,15 +74,6 @@ module Fetch
       Dir.glob( File.join(@basename, '**', "*#{@type}") ).each do |chapter|
         FileUtils.mv(chapter, @chaper_loc) unless File.exists?(File.join(@chapter_loc, chapter))
       end
-    end
-    
-    
-    # Clean Up
-    #
-    # Clean up after ourselves
-    #
-    def cleanup
-      FileUtils.rm_rf( File.join(@location, @basename) )
     end
     
     

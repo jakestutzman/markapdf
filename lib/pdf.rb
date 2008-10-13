@@ -54,44 +54,43 @@ module PDF
         )
       end
     end
+
+      
+    # Grab all the stylesheets from the stylesheets folder
+    #
+    # If not passed, it assumes you are in the directory above 
+    # the book root
+    #
+    # Searches the stylesheet directory, where the book layout 
+    # template (book/) is located and adds all stylesheets, 
+    # in order. 
+    #
+    # book_location =>  The Location of where the Book Layout lives  -- String / File Path
+    #
+    # For ordering, make sure to name your stylesheets like:
+    # 001_reset.css
+    # 002_base.css
+    # 003_typeography.css
+    #
+    # Returns an array of stylesheets within
+    #
+    def merge_stylesheets
+      stylesheets = File.join(@book_location, "layout/stylesheets")
+      sheets      = Array.new
+      
+      Dir["#{stylesheets}/*.css"].sort.each { |css| sheets << css }
+      sheets << File.join(stylesheets, "highlight/#{@code_css}.css")
+      return sheets
+    end
     
     
-    protected
-      
-      # Grab all the stylesheets from the stylesheets folder
-      #
-      # If not passed, it assumes you are in the directory above 
-      # the book root
-      #
-      # Searches the stylesheet directory, where the book layout 
-      # template (book/) is located and adds all stylesheets, 
-      # in order. 
-      #
-      # book_location =>  The Location of where the Book Layout lives  -- String / File Path
-      #
-      # For ordering, make sure to name your stylesheets like:
-      # 001_reset.css
-      # 002_base.css
-      # 003_typeography.css
-      #
-      # Returns an array of stylesheets within
-      def merge_stylesheets
-        stylesheets = File.join(@book_location, "layout/stylesheets")
-        sheets      = Array.new
-        
-        Dir["#{stylesheets}/*.css"].sort.each { |css| sheets << css }
-        sheets << File.join(stylesheets, "highlight/#{@code_css}.css")
-        return sheets
-      end
-      
-      
-      # create_html_book
-      #
-      # Creates the HTML book if it doesn't exist
-      #
-      def create_html_book
-        HTML::Book.make(@options) unless File.exists?( File.join(@book_location, "output/#{@bookname}.html") )
-      end
+    # create_html_book
+    #
+    # Creates the HTML book if it doesn't exist
+    #
+    def create_html_book
+      HTML::Book.make(@options) unless File.exists?(File.join(@book_location, "output/#{@bookname}.html"))
+    end
     
   end
   

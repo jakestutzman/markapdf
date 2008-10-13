@@ -32,7 +32,7 @@ module Generate
     # Copies the book location over to the desired location.
     #
     def clone
-      system("cp -r #{@book} #{@location}")
+      FileUtils.cp_r( @book, @location )
     end
     
  end 
