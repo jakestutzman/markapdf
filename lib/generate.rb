@@ -4,6 +4,8 @@
 # 
 # Generate our book layout to any given location
 #
+# Generate::Book.now(location)
+#
 module Generate
  
  class Book

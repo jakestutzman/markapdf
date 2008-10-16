@@ -18,5 +18,4 @@ module FileHelper
     paths.each { |path| FileUtils.rm_rf(path) }
   end
   
-  
 end

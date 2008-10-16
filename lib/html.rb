@@ -21,6 +21,7 @@ module HTML
     @@textile         = %w[textile]
     @@supported_types = @@markdown.concat( @@textile )
     
+    
     # Initializer
     #
     # initialize sets up our book location and our book output
@@ -192,7 +193,7 @@ module HTML
       end
       return code
     end
-      
+
   end
   
 end

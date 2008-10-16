@@ -1,5 +1,5 @@
-%w[uri net/http fileutils lib/generate].each { |r| require r }
-
+require 'fileutils'
+require 'lib/generate'
 require 'lib/mixins/file_helper'
 
 # Fetch
