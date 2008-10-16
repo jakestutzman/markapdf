@@ -9,7 +9,7 @@
 module Generate
  
  class Book
-    attr_reader :location
+    attr_reader :location, :book
     
     # 
     # location => "The location you want to install the book framework"
