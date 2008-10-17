@@ -27,13 +27,12 @@ module HTML
     # initialize sets up our book location and our book output
     # it will create our output_path folder if it doesn't exist
     #
-    # @param {:book_location => "where the root of the book is located",
-    #         :code_css      => "What stylesheet do you want to use for code highlighting",
+    # @param {:code_css      => "What stylesheet do you want to use for code highlighting",
     #         :bookname      => "The name of the book",
     #         :code_lang     => "Pass in the Language for the code if you only covering 1 language"}
     #
     def initialize(options={})
-      @book_location  = options["book-location"] || File.join(Dir.pwd, "book")
+      @book_location  = File.join(Dir.pwd, "book")
       @code_css       = options["code-css"]      || "lazy"
       @bookname       = options["bookname"]      || "MyBook"
       @code_lang      = options["code-lang"]     || "ruby"

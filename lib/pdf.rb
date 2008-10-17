@@ -16,14 +16,14 @@ module PDF
     # here, will be passed to HTML::Book class to create the 
     # HTML book if it doesn't exist.
     #
-    # @param {:book_location => "where the root of the book is located",
-    #         :bookname      => "The name of the book"}
+    # @param {:bookname      => "The name of the book"
+    #         :code_css      => "The CSS file for Syntax Highlighting" }
     #
     def initialize(options={})
       @options        = options
-      @book_location  = options["book-location"] || File.join(Dir.pwd, "book")
+      @book_location  = File.join(Dir.pwd, "book")
       @bookname       = options["bookname"]      || "MyBook"
-      @code_css       = options["code-css"]      || "lazy"
+      @code_css       = options["code-css"]      || "lazy" # TODO: Pull this out.
       create_html_book
     end
     
@@ -74,8 +74,8 @@ module PDF
     #
     # Returns an array of stylesheets within
     #
-    def merge_stylesheets
-      stylesheets = File.join(@book_location, "layout/stylesheets")
+    def merge_stylesheets(book_location)
+      stylesheets = File.join(book_location, "layout/stylesheets")
       sheets      = Array.new
       
       Dir["#{stylesheets}/*.css"].sort.each { |css| sheets << css }
