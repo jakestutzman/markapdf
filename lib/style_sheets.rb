@@ -1,4 +1,8 @@
 %w[fileutils].each { |r| require r }
+require 'lib/mixins/error_classes'
+require 'lib/mixins/file_helper'
+
+include ErrorClasses
 
 # StyleSheets Class
 #
@@ -21,6 +25,7 @@
 #
 #
 class StyleSheets
+  include FileHelper
   
   # StyleSheets.new
   #
@@ -28,26 +33,11 @@ class StyleSheets
   #   location  => Where the book is located
   #   css       => The name of the Syntax Highligher CSS File
   #
-  def initialize(options={})
-    @book_location  = options[:location]
-    @code_css       = options[:css]
-  end
-  
-  
-  # StyleSheets.utils
-  #
-  # options hash:
-  #   location  => Where the book is located
-  #   css       => The name of the Syntax Highligher CSS File
-  #
-  # We can instantiate this method to access our css utilities in our class here.
-  # Just doing the #new, allows for less loading and populating so we can just
-  # execute (for example) the merge method.
-  #
-  def self.utils(options={})
-    css = Style::Sheets.new(options)
-    @css_core_file      = File.join("lib/stylesheets/")
-    @css_core_file_list = Array.new
+  def initialize(options)
+    @book_location        = File.expand_path(options[:location])
+    @code_css             = options[:css]
+    @css_core_file        = File.join("lib/stylesheets/")
+    @css_core_file_list   = Array.new
     all_css_files
   end
   
@@ -56,7 +46,7 @@ class StyleSheets
   #
   # List out the names that we support for CSS Syntax Highlighting
   def list
-    @css_core_file_list.each { |css| puts css }
+    @css_core_file_list.each { |css| puts css } and return true
   end
   
   
@@ -81,8 +71,22 @@ class StyleSheets
   #
   def move_all
     book_css_dir = File.join(@book_location, 'layout/stylesheets/highlight/')
-    FileUtils.mkdir(book_css_dir) unless File.exists?(book_css_dir)
-    FileUtils.cp_r(book_css_dir, @css_core_file) # TODO: Test this
+    create_if_missing(book_css_dir)
+    Dir["#{@css_core_file}/*.css"].each { |css| FileUtils.cp(css, book_css_dir) }
+  end
+  
+  
+  # Move CSS
+  #
+  # Move a single CSS file to the books layout directory.
+  #
+  # TODO: Need to be able to match the CSS file if it is typed incorrectly
+  #
+  def move_css
+    book_css_dir  = File.join(@book_location, 'layout/stylesheets/')
+    code_css_file = File.join(@css_core_file, "#{@code_css}.css")
+    FileUtils.cp(code_css_file, book_css_dir) 
+    raise CSSNotFound unless File.exists?(code_css_file)
   end
   
   
@@ -93,6 +97,10 @@ class StyleSheets
   #
 
   
+  # Merge -> Class Method
+  #
+  # StyleSheets.merge
+  #
   # Grab all the stylesheets from the stylesheets folder
   #
   # If not passed, it assumes you are in the directory above 
@@ -102,7 +110,7 @@ class StyleSheets
   # template (book/) is located and adds all stylesheets, 
   # in order. 
   #
-  # book_location =>  The Location of where the Book Layout lives  -- String / File Path
+  # book_location [String] =>  The Location of where the Book Layout lives
   #
   # For ordering, make sure to name your stylesheets like:
   # 001_reset.css
@@ -111,8 +119,8 @@ class StyleSheets
   #
   # Returns an array of stylesheets within
   #
-  def merge
-    stylesheets = File.join(@book_location, "layout/stylesheets")
+  def self.merge(book_location)
+    stylesheets = File.join(File.expand_path(book_location), "layout/stylesheets")
     sheets      = Array.new
   
     Dir["#{stylesheets}/*.css"].sort.each { |css| sheets << css }
