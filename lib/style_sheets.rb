@@ -14,15 +14,6 @@ include ErrorClasses
 # and insert the stylesheets into the head of the Book's HTML template
 # file.
 #
-# There are two ways to initialize this Class:
-#
-# StyleSheets.new
-# StyleSheets.utils
-#
-# The #new option is a leaner entrance to do book merging for the PDF
-# Book. The utils entrance is for doing some more utility things, as
-# mentioned above.
-#
 #
 class StyleSheets
   include FileHelper
@@ -99,7 +90,7 @@ class StyleSheets
   
   # Merge -> Class Method
   #
-  # StyleSheets.merge
+  # StyleSheets.merge(book_location)
   #
   # Grab all the stylesheets from the stylesheets folder
   #
