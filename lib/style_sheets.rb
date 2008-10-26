@@ -110,10 +110,8 @@ class StyleSheets
   #
   # Returns an array of stylesheets within
   #
-  def self.merge(book_location)
+  def self.merge(book_location, sheets=[])
     stylesheets = File.join(File.expand_path(book_location), "layout/stylesheets")
-    sheets      = []
-  
     Dir["#{stylesheets}/*.css"].sort.each { |css| sheets << css }
     return sheets
   end
