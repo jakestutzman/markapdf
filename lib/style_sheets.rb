@@ -1,4 +1,4 @@
-%w[fileutils].each { |r| require r }
+%w[fileutils rubygems hpricot].each { |r| require r }
 require 'lib/mixins/error_classes'
 require 'lib/mixins/file_helper'
 
@@ -37,7 +37,7 @@ class StyleSheets
     @book_location        = File.expand_path(options[:location])
     @code_css             = options[:css]
     @css_core_file        = File.join("lib/stylesheets/")
-    @css_core_file_list   = Array.new
+    @css_core_file_list   = []
     all_css_files
   end
   

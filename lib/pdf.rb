@@ -1,5 +1,6 @@
 require 'lib/html'
 require 'lib/prince'
+require 'lib/style_sheets'
 
 module PDF
   
@@ -43,8 +44,9 @@ module PDF
     # Creates our PDF Book
     #
     def create
-      prince  = Prince.new
-      prince.add_style_sheets(merge_stylesheets)
+      prince      = Prince.new
+      stylesheets = StyleSheets.merge(@book_location)
+      prince.add_style_sheets(stylesheets)
 
       File.open("#{File.join(@book_location, 'output', @bookname)}.pdf", 'w') do |f|
         f.puts prince.pdf_from_string( 
@@ -55,33 +57,6 @@ module PDF
       end
     end
 
-      
-    # Grab all the stylesheets from the stylesheets folder
-    #
-    # If not passed, it assumes you are in the directory above 
-    # the book root
-    #
-    # Searches the stylesheet directory, where the book layout 
-    # template (book/) is located and adds all stylesheets, 
-    # in order. 
-    #
-    # book_location =>  The Location of where the Book Layout lives  -- String / File Path
-    #
-    # For ordering, make sure to name your stylesheets like:
-    # 001_reset.css
-    # 002_base.css
-    # 003_typeography.css
-    #
-    # Returns an array of stylesheets within
-    #
-    def merge_stylesheets(book_location)
-      stylesheets = File.join(book_location, "layout/stylesheets")
-      sheets      = Array.new
-      
-      Dir["#{stylesheets}/*.css"].sort.each { |css| sheets << css }
-      sheets << File.join(stylesheets, "highlight/#{@code_css}.css")
-      return sheets
-    end
     
     
     # create_html_book
