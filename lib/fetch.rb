@@ -52,7 +52,7 @@ module Fetch
       book.generate_book
       book.pull
       book.copy
-      clean_up File.join(@location, @basename)
+      # clean_up File.join(@location, @basename)
     end
     
     
@@ -63,7 +63,7 @@ module Fetch
     #
     def pull
       FileUtils.cd(@location)
-      `git clone #{@url}`
+      `git clone #{@url}` unless File.exists?(File.join(@location, @basename))
     end
     
     
@@ -72,8 +72,8 @@ module Fetch
     # Copy over the files we've collected from our pull request.
     #
     def copy
-      Dir.glob( File.join(@location, @basename, '**', "*#{@type}") ).each do |chapter|
-        FileUtils.mv(chapter, @chaper_loc) unless File.exists?(File.join(@chapter_loc, File.basename(chapter)))
+      Dir.glob( File.join(@location, @basename, '**', "*.#{@type}") ).each do |chapter|
+        FileUtils.cp(chapter, @chapter_loc) unless File.exists?( File.join(@chapter_loc, File.basename(chapter)) )
       end
     end
     
@@ -83,7 +83,7 @@ module Fetch
     # Generates the Book Layout.
     #
     def generate_book
-      Generate::Book.now(@location)
+      Generate::Book.now(@location) unless File.exists?( File.join(@location, 'book') )
     end
     
   end

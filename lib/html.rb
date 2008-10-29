@@ -7,6 +7,17 @@ require 'lib/mixins/file_helper'
 #
 # TODO: Still needs a lot of refactoring of several methods to slim down
 # and make flexible. Many methods are just ugly.
+#!/usr/bin/env ruby
+
+# require "redcloth"
+# 
+# contents = Array.new()
+# $stdin.each_line() { |line|
+#   contents << line
+# }
+# 
+# puts(RedCloth.new(contents.join()).to_html(:textile))
+
 #
 #
 module HTML
@@ -17,9 +28,9 @@ module HTML
     include FileHelper
     
     attr_reader :book_location, :output_path, :bookname, :code_css, :code_lang, :markup
-    @@markdown        = %w[markdown mdown]
+    @@markdown        = %w[markdown mdown mkdn]
     @@textile         = %w[textile]
-    @@supported_types = @@markdown.concat( @@textile )
+    @@supported_types = @@markdown + @@textile
     
     
     # Initializer
@@ -32,12 +43,12 @@ module HTML
     #         :code_lang     => "Pass in the Language for the code if you only covering 1 language"}
     #
     def initialize(options={})
-      @book_location  = File.join(Dir.pwd, "book")
+      @book_location  = options['location']      || File.join(Dir.pwd, "book")
       @code_css       = options["code-css"]      || "lazy"
       @bookname       = options["bookname"]      || "MyBook"
       @code_lang      = options["code-lang"]     || "ruby"
       @output_path    = File.join(@book_location, "output")
-      @markup         = book_type(@book_location)
+      book_type(@book_location)
     end
     
     
@@ -67,9 +78,9 @@ module HTML
     def create
       create_if_missing(@output_path)
       @book = merge_chapters(File.join(@book_location, "layout/chapters"))
-      to_html(@book)
+      to_html
       template
-      clean_up File.join(@output_path, "book.html"), File.join(@output_path, "book.#{@markup}")
+      # clean_up File.join(@output_path, "book.html"), File.join(@output_path, "book.#{@markup}")
       return "Completed"
     end
     
@@ -80,9 +91,8 @@ module HTML
     #
     def book_type(book_location)
       chapter_path  = File.join(book_location, "layout/chapters")
-      type          = Dir["#{chapter_path}/*"].first.split('.').last
-      raise UnSupportedType unless @@supported_types.include?(type)
-      return type
+      @markup       = Dir["#{chapter_path}/*"].first.split('.').last
+      raise UnSupportedType unless @@supported_types.include?(@markup)
     end
     
     
@@ -91,11 +101,44 @@ module HTML
     # path [String]   =>  where the MarkDown version is 
     #                               located
     #
-    def to_html(path)
-      output = File.new(path).read
+    def to_html
+      output = File.new(@book).read
+      
+      if @@markdown.include?(@markup)
+        markdown(output)
+      elsif @@textile.include?(@markup)
+        textile(output)
+      end
+      
+    end
+    
+    
+    def markdown(output)
+      output = []
+      File.open(@book, 'r') do |content|
+        while(line = file.gets)
+          output << line
+        end
+      end
+      
+      
+      
       File.open(File.join(@output_path, "book.html"), 'w') do |f| 
-        f << RDiscount.new(output).to_html if @@markdown.include?(@markup)
-        f << RedCloth.new(output).to_html  if @@textile.include?(@markup)
+        f << RDiscount.new(output.join()).to_html
+      end
+    end
+    
+    
+    def textile(output)
+      output = []
+      File.open(@book, 'r') do |content|
+        while(line = content.gets)
+          output << line
+        end
+      end
+      
+      File.open(File.join(@output_path, "book.html"), 'w') do |f| 
+        f << RedCloth.new(output.join()).to_html(:textile)
       end
     end
     
@@ -109,6 +152,7 @@ module HTML
     #                       chapters                            -- String / File Path
     #
     # For ordering, make sure to name your chapters like:
+    #
     # 001_Introduction.markdown
     # 002_Heading_Home.markdown
     # 003_A_New_Journey.markdown
@@ -146,7 +190,7 @@ module HTML
       html          = File.new(File.join(@output_path, "book.html")).read
       html_template = File.new(File.join(@book_location, 'layout/template.html')).read
       html_template.gsub!("#body", html)
-      html_template = code_highlight(html_template)
+      # html_template = code_highlight(html_template)
       File.open(File.join(@output_path, "#{@bookname}.html"), 'w+') do |f|
         f << html_template
       end
