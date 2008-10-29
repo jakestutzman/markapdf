@@ -34,6 +34,7 @@ module Generate
     # Copies the book location over to the desired location.
     #
     def clone
+      FileUtils.mkdir_p(@book) unless File.exists?(@book)
       FileUtils.cp_r( @book, @location )
     end
     

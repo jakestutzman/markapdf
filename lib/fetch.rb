@@ -21,6 +21,8 @@ module Fetch
   class Book
     include FileHelper
     
+    attr_reader :url, :location, :basename, :chapter_loc
+    
     # init
     #
     # Arguments Required
@@ -70,9 +72,8 @@ module Fetch
     # Copy over the files we've collected from our pull request.
     #
     def copy
-      FileUtils.cd(@location)
-      Dir.glob( File.join(@basename, '**', "*#{@type}") ).each do |chapter|
-        FileUtils.mv(chapter, @chaper_loc) unless File.exists?(File.join(@chapter_loc, chapter))
+      Dir.glob( File.join(@location, @basename, '**', "*#{@type}") ).each do |chapter|
+        FileUtils.mv(chapter, @chaper_loc) unless File.exists?(File.join(@chapter_loc, File.basename(chapter)))
       end
     end
     
